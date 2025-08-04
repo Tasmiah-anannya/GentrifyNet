@@ -1,4 +1,5 @@
 """
+---------------Visual Feature Generation---------------------
 Description:
     1. Generates a combined building list CSV for a city and year by merging all tract-level building CSV files, extracting GEOID, ensuring columns, and filling missing heights.
     2. Rasterizes 2D polygonal building shapes from CSV to binary images.
