@@ -26,8 +26,7 @@ INPUT_FOLDER = f"/data/folder/{CITY}/Building Footprint {YEAR}_{CITY}/"   #this 
 OUTPUT_CSV = f"/data/folder/{CITY}/Building Footprint {YEAR}_{CITY}/Building list/combined_building_list.csv"
 TRACT_PATTERN = "buildings_tract_*.csv"  
 
-
-#Create combined_building_list.csv
+# ------------- Create combined_building_list.csv -------------
 def generate_combined_building_list(input_folder, output_csv, tract_pattern="buildings_tract_*.csv"):
     df_list = []
     csv_files = glob.glob(os.path.join(input_folder, tract_pattern))
