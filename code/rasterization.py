@@ -1,7 +1,13 @@
 """
 Description:
-    1. Rasterizes 2D polygonal building shapes from CSV to binary images.
-    2. Encodes building types as one-hot arrays.
+    1. Generates a combined building list CSV for a city and year by merging all tract-level building CSV files, extracting GEOID, ensuring columns, and filling missing heights.
+    2. Rasterizes 2D polygonal building shapes from CSV to binary images.
+    3. Encodes building types as one-hot arrays.
+    
+Expected input folder ('Building list'):
+- Contains tract-level building CSVs, named like 'buildings_tract_*.csv'. * represents tract no.
+- Each CSV corresponds to one tract and has columns: 'geometry' (WKT), 'height', 'nycdoitt:bin'.
+- Files can have missing columns; these will be filled as needed in the script.
 
 """
 
@@ -12,6 +18,56 @@ import pandas as pd
 from shapely import wkt, affinity
 import rasterio.features
 from tqdm import trange
+import glob
+
+CITY = "Chicago"  #Chicago, Brooklyn, Los Angeles for our case
+YEAR = "2013"   #2013, 2018 and 2020 for two configurations from our paper
+INPUT_FOLDER = f"/data/folder/{CITY}/Building Footprint {YEAR}_{CITY}/"   #this folder contains csv files contain tract-level CSV files (e.g. 'buildings_tract_*.csv'), * is the tract_no, each representing building footprints and attributes for a single tract.
+OUTPUT_CSV = f"/data/folder/{CITY}/Building Footprint {YEAR}_{CITY}/Building list/combined_building_list.csv"
+TRACT_PATTERN = "buildings_tract_*.csv"  
+
+
+#Create combined_building_list.csv
+def generate_combined_building_list(input_folder, output_csv, tract_pattern="buildings_tract_*.csv"):
+    df_list = []
+    csv_files = glob.glob(os.path.join(input_folder, tract_pattern))
+    if not csv_files:
+        print(f"No files found with pattern {tract_pattern} in {input_folder}")
+        return
+
+    for csv_file in csv_files:
+        print(f"Reading: {csv_file}")
+        base_name = os.path.basename(csv_file)
+        parts = base_name.split('_')
+        geoid = parts[2] if len(parts) >= 3 else np.nan
+
+        df = pd.read_csv(csv_file)
+
+        if 'height' in df.columns:
+            df['height'] = pd.to_numeric(df['height'], errors='coerce')
+        required_cols = ['geometry', 'height', 'nycdoitt:bin']
+        for col in required_cols:
+            if col not in df.columns:
+                df[col] = np.nan
+        df.insert(0, "GEOID", geoid)
+        df = df[['GEOID', 'geometry', 'height', 'nycdoitt:bin']]
+        df_list.append(df)
+
+    combined_df = pd.concat(df_list, ignore_index=True)
+    avg_heights = combined_df.groupby("GEOID")["height"].mean()
+
+    def fill_height(row):
+        if pd.isnull(row["height"]):
+            return avg_heights.get(row["GEOID"], np.nan)
+        else:
+            return row["height"]
+
+    combined_df["height"] = combined_df.apply(fill_height, axis=1)
+    combined_df.to_csv(output_csv, index=False)
+    print(f"Combined CSV written to: {output_csv}")
+    print(combined_df.head())
+    
+
 
 # ------------- Building Type Definitions according to OSM -------------
 accommodation_tags = {
@@ -175,22 +231,17 @@ def rasterize_buildings(building_list, out_dir, rotation=True, batch_size=10000)
 
     return images, rot_type_arr
 
-# ----------- Main -----------
 def main():
-    csv_file = "data/building_list.csv"      # update with your csv path
-    out_dir = "output/"                      # update with your output directory
-    rotation = True                          # or False
-    batch_size = 10000                       # or any number you want
+    # Combine tract CSVs into a single building list
+    generate_combined_building_list(INPUT_FOLDER, OUTPUT_CSV, TRACT_PATTERN)
 
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
-
+    # Rasterize buildings and encode types
+    out_dir = INPUT_FOLDER   
     print("Loading building data...")
-    building_list = load_building_list(csv_file)
+    building_list = load_building_list(OUTPUT_CSV)
     print(f"Loaded {len(building_list)} buildings.")
-
     print("Rasterizing and encoding buildings...")
-    rasterize_buildings(building_list, out_dir=out_dir, rotation=rotation, batch_size=batch_size)
+    rasterize_buildings(building_list, out_dir=out_dir, rotation=True, batch_size=10000)
     print("Done.")
 
 if __name__ == '__main__':
