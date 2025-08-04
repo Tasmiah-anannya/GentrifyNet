@@ -27,9 +27,7 @@ from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
-# ===============================
-# CONFIGURE THESE VARIABLES 
-# ===============================
+
 CITY = "Chicago" #Chicago, Brookly, Los Angeles for our case
 YEAR = "2013"  # We used 2013, 2018 and 2020 for two configurations
 DATA_ROOT = "/data/folder"
