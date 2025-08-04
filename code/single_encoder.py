@@ -1,16 +1,15 @@
 """
-Single-Scale Embedder Architecture for model-variant
+-----------Single-Scale Embedder Architecture for model-variant--------------
 
-This module implements the SingleScaleEmbedder, a single-encoder transformer architecture for unsupervised tract-level embedding.
-This architecture is intended for ablation studies to compare against the dual-scale (local/global) transformer model.
-Use this in place of the DualScaleEmbedder to assess the effect of removing the dual-encoder structure.
+Description:
+    1. This module implements the SingleScaleEmbedder, a single-encoder transformer architecture for unsupervised tract-level embedding.
+    Use this in place of the DualScaleEmbedder to assess the effect of removing the dual-encoder structure.
 
+Workflow:
 - Replace DualScaleEmbedder with SingleScaleEmbedder in your pipeline to run the architecture ablation.
 - All other pipeline code and training methods remain unchanged.
 
-References:
-- See dual_encoder_embedder.py for the full dual-encoder version.
-
+Note: See dual_scale_encoder.py for the full dual-encoder version.
 """
 
 import torch
