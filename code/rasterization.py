@@ -1,6 +1,4 @@
 """
-@file: data_preprocessing.py
-
 Description:
     1. Rasterizes 2D polygonal building shapes from CSV to binary images.
     2. Encodes building types as one-hot arrays.
