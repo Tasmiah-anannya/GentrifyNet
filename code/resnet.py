@@ -1,4 +1,5 @@
 """
+---------------Visual Feature Generation---------------------
 Description:
     This script defines a PyTorch ResNet-based embedding model (using SimCLR-style contrastive learning) for extracting feature vectors from rasterized building footprint images.
 
