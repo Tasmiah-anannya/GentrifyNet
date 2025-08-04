@@ -28,10 +28,9 @@ from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 import zipfile
 
+#------------- Dataset for loading building images from an npz file.----------
+
 class ImageDataset(Dataset):
-    """
-    Dataset for loading building images from an npz file.
-    """
     def __init__(self, npz_file, extract_path="temp_building_images"):
         super().__init__()
         # Extract the npz file if needed (portable way)
@@ -50,7 +49,6 @@ class ImageDataset(Dataset):
     def __len__(self):
         return self.images.shape[0]
 
-    @staticmethod
     def collate_fn_augmentation(batch):
         result = []
         augmentations = [lambda x: x,
@@ -66,7 +64,6 @@ class ImageDataset(Dataset):
             result.append(choice2(pic)[np.newaxis, :, :])
         return np.concatenate(result, axis=0)
 
-    @staticmethod
     def collate_fn_embed(batch):
         return np.vstack([pic[np.newaxis, :, :] for pic in batch])
 
