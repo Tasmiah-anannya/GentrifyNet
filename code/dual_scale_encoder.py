@@ -1,5 +1,5 @@
 """
-Unsupervised Building-to-Tract Embedding Pipeline using self-supervised contrastive learning
+Unsupervised Building-to-Tract Embedding Pipeline using self-supervised contrastive learning (Spatial Correlation Capture)
 
 This script trains a dual-scale transformer model for generating unsupervised tract-level embeddings from per-building features. 
 It implements self-supervised contrastive learning with data augmentation on building sequences within each tract.
