@@ -10,10 +10,6 @@ Features:
     - Supports training with SimCLR-style contrastive loss (InfoNCE).
     - Provides functions to extract and save building embeddings for downstream tasks.
 
-Usage:
-    - Adjust the path to the input .npz file (containing rasterized images) and output .npy file for embeddings.
-    - Optionally train the model, or just extract embeddings from preprocessed images.
-
 Note:
     This script assumes you have already run the rasterization pipeline to generate the rasterized building images.
 """
