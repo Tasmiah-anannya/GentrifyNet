@@ -1,14 +1,15 @@
 """
-Downstream Gentrification Prediction Pipeline
+---------------Temporal Change Detection---------------------
 
-This script demonstrates three methods for using unsupervised building embeddings (from two years) to predict gentrification status:
-    1. Feature concatenation: Concatenate past and current embeddings. In this file we have used embeddings from 2013 (past) and 2020 (current) for our long-span configuration.
+Description:
+    -This script demonstrates three methods using building embeddings (from two years) to predict gentrification status:
+        1. Feature concatenation: Concatenate past and current embeddings. In this file we have used embeddings from 2013 (past) and 2020 (current) for our long-span configuration.
         **Need to do the same for short-span configuration.
-    2. Cross-attention: Use a shallow, trainable cross-attention to combine embeddings.
-    3. Cross-attention + supervised contrastive loss: Fine-tune the post-attention module with a supervised contrastive objective.
-For each approach, both Random Forest and Gradient Boosting classifiers are evaluated.
+        2. Cross-attention: Use a shallow, trainable cross-attention to combine embeddings.
+        3. Cross-attention + supervised contrastive loss: Fine-tune the post-attention module with a supervised contrastive objective.
+    -For each approach, both Random Forest and Gradient Boosting classifiers are evaluated.
 
-Requirements:
+Required input files:
     - Embedding files (e.g., `building_embeddings.csv` for each year), generated form embedding_creation.py for each year
     - Label files with tract-level gentrification status , need to generate GT as the same way mentioned in paper
 """
