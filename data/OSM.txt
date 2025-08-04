@@ -1,1 +1,1 @@
-
+We collected building footprint data for three areas: Brooklyn, Los Angeles and Chicago of U.S, from the OpenStreetMap (OSM): https://www.openstreetmap.org
